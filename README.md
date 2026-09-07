@@ -26,6 +26,10 @@ Serwuj katalog dowolnym serwerem statycznym (np. `python3 -m http.server 8765`) 
 
 `node test-ui.cjs` — wymaga lokalnego serwera na porcie 8765 i Chromium w /usr/bin/chromium. `TEST_URL` pozwala testować opublikowaną stronę. Testy desktop/mobile, zapis/skreślenie, blokady, zakup rzutu, zakończona gra, niepoprawne dane, suma EV i błędy JavaScript.
 
+`node test-ui-state.cjs` — regresje loadera i stanu „Nieaktualne” dla wszystkich wejść, zmian/resetu podczas pracy, błędów danych, pobierania modelu i workera. Testy opóźniają wyłącznie dostarczenie odpowiedzi prawdziwego solvera, nie zastępują obliczeń. Zrzuty desktop/mobile w `test-artifacts/`.
+
+Obliczenia działają w `solver-worker.js`, poza wątkiem interfejsu. Pierwszy wynik wczytuje się automatycznie; dalsze zmiany (także „Nowa gra”) oznaczają wynik jako nieaktualny do kliknięcia przycisku. Odpowiedzi dla zmienionych wejść są odrzucane.
+
 ## Hosting
 
 GitHub Pages, gałąź main, katalog główny. Aplikacja nie wymaga procesu backendowego, kluczy ani płatnych usług. Repozytorium zawiera wyłącznie aplikację i jej testy.

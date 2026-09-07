@@ -1,21 +1,39 @@
 'use strict';
 const $=id=>document.getElementById(id),names=DicePoker.names;
-let engine=null;
+let worker=null,ready=false,busy=false,revision=0,request=null;
 const initial=[2,2,6,6,1];
 $('dice').innerHTML=initial.map((v,i)=>`<div class="die"><input class="die-value" id="die-${i}" aria-label="Kość ${i+1}: liczba oczek" type="number" min="1" max="6" step="1" inputmode="numeric" value="${v}"><label class="lock-label"><input class="lock" id="lock-${i}" type="checkbox" aria-label="Kość ${i+1} odłożona">Odłożona</label></div>`).join('');
 $('categories').innerHTML=names.map((name,c)=>`<label class="category"><input type="checkbox" id="used-${c}"><span>${name}</span></label>`).join('');
 const fmt=n=>n.toLocaleString('pl-PL',{minimumFractionDigits:3,maximumFractionDigits:3});
 function state(){return {dice:initial.map((_,i)=>Number($('die-'+i).value)),locked:initial.map((_,i)=>$('lock-'+i).checked),mask:names.reduce((m,_,c)=>m|($('used-'+c).checked?0:1<<c),0),roll:Number($('roll').value),extra:$('extra').checked};}
-function calculate(){
- if(!engine)return;
- const s=state(),occupied=names.filter((_,c)=>$('used-'+c).checked).length;
+function syncControls(){
+ const occupied=names.filter((_,c)=>$('used-'+c).checked).length,paid=$('roll').value==='4';
  $('turn-badge').textContent=occupied===7?'Koniec gry':`Tura ${occupied+1} / 7`;
- if(s.roll===4){s.extra=false;$('extra').checked=false;}
- $('extra').disabled=s.roll===4;$('paid-note').hidden=s.roll!==4;
- const bank=$('bank').value===''?0:Number($('bank').value);
- try{
-  if(!Number.isFinite(bank))throw Error('Wpisz poprawny dotychczasowy wynik.');
-  const all=engine.rank(s);$('results').replaceChildren();
+ if(paid)$('extra').checked=false;
+ $('extra').disabled=paid;$('paid-note').hidden=!paid;
+}
+function setBusy(value,label='Porównaj najlepsze ruchy →'){
+ busy=value;$('calculate').disabled=value||!ready;
+ $('calculate').setAttribute('aria-busy',String(value));
+ $('calculate-label').textContent=value?'Obliczanie…':label;
+}
+function invalidate(){
+ revision++;syncControls();$('freshness').textContent='Nieaktualne';
+}
+function showError(message){
+ $('results').replaceChildren();$('status').textContent=message;$('freshness').textContent='Nieaktualne';
+}
+function calculate(){
+ if(!ready||busy)return;
+ syncControls();
+ const s=state(),bank=$('bank').value===''?0:Number($('bank').value);
+ if($('bank').validity.badInput||!Number.isFinite(bank)){showError('Wpisz poprawny dotychczasowy wynik.');return;}
+ request={revision,s,bank,occupied:names.filter((_,c)=>$('used-'+c).checked).length};
+ setBusy(true);
+ try{worker.postMessage({revision,state:s});}catch{fatal('Nie udało się uruchomić obliczeń. Odśwież stronę.');}
+}
+function render(all,{s,bank,occupied}){
+  $('results').replaceChildren();
   if(!all.length){$('status').textContent=`Wszystkie kategorie są zajęte. Gra zakończona — wynik: ${bank} pkt.`;return;}
   const top=all.slice(0,3);
   $('status').textContent=`Porównano ${all.length} legalnych ruchów. EV obejmuje obecną turę i ${6-occupied} kolejnych.`;
@@ -30,10 +48,29 @@ function calculate(){
    card.innerHTML=`<div class="move-top"><span class="rank">${i+1}. ${i===0?'NAJLEPSZY RUCH':'ALTERNATYWA'}</span><span class="delta">${delta<1e-9?'Najwyższe EV':'−'+fmt(delta)+' pkt EV'}</span></div><h3>${title}</h3><p>${detail}</p><div class="ev-row"><div><div class="ev-number">${fmt(a.ev)} <small>pkt</small></div><div class="ev-label">EV od teraz do końca</div></div><div class="end-score">Przewidywana suma<b>${fmt(bank+a.ev)} pkt</b></div></div>`;
    $('results').append(card);
   });
- }catch(err){$('results').replaceChildren();$('status').textContent=err.message;}
 }
 $('calculate').addEventListener('click',calculate);
-document.querySelector('.position').addEventListener('change',calculate);
-let pending;document.querySelector('.position').addEventListener('input',()=>{clearTimeout(pending);pending=setTimeout(calculate,150);});
-$('reset').addEventListener('click',()=>{initial.forEach((v,i)=>{$('die-'+i).value=v;$('lock-'+i).checked=false;});names.forEach((_,c)=>$('used-'+c).checked=false);$('roll').value='1';$('bank').value='0';$('extra').checked=true;$('extra').disabled=false;calculate();});
-fetch('./values.json').then(r=>{if(!r.ok)throw Error('Nie udało się pobrać tabeli EV. Odśwież stronę.');return r.json();}).then(values=>{engine=new DicePoker.Engine(values);$('calculate').disabled=false;$('calculate').textContent='Porównaj najlepsze ruchy →';calculate();}).catch(err=>{$('status').textContent=err.message;$('calculate').textContent='Odśwież stronę, aby wczytać model';});
+document.querySelector('.position').addEventListener('change',invalidate);
+document.querySelector('.position').addEventListener('input',invalidate);
+$('reset').addEventListener('click',()=>{initial.forEach((v,i)=>{$('die-'+i).value=v;$('lock-'+i).checked=false;});names.forEach((_,c)=>$('used-'+c).checked=false);$('roll').value='1';$('bank').value='0';$('extra').checked=true;invalidate();});
+function fatal(message){
+ ready=false;request=null;worker?.terminate();setBusy(false,'Odśwież stronę, aby wczytać model');showError(message);
+}
+try{
+ worker=new Worker('./solver-worker.js');
+ worker.onmessage=({data})=>{
+  if(data.type==='fatal'){fatal(data.error);return;}
+  if(data.type==='ready'){ready=true;setBusy(false);calculate();return;}
+  if(!request||data.revision!==request.revision)return;
+  const completed=request;request=null;
+  try{
+   // Never publish results (or errors) for inputs changed while the worker ran.
+   if(completed.revision!==revision)return;
+   if(data.error){showError(data.error);return;}
+   render(data.all,completed);$('freshness').textContent='Aktualne';
+  }catch{showError('Nie udało się wyświetlić wyniku. Spróbuj ponownie.');}
+  finally{setBusy(false);}
+ };
+ worker.onerror=event=>{event.preventDefault();fatal('Nie udało się uruchomić modelu. Odśwież stronę.');};
+ worker.onmessageerror=()=>fatal('Nie udało się odczytać wyniku. Odśwież stronę.');
+}catch{fatal('Nie udało się uruchomić modelu. Odśwież stronę.');}
