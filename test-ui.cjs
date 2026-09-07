@@ -20,7 +20,7 @@ await page.selectOption('#roll','4');assert(await page.locator('#extra').isDisab
 await calculate(page);assert(!(await page.locator('#results').innerText()).includes('Kup czwarty'));
 await page.check('#used-6');await calculate(page);assert.equal(await page.locator('.move').count(),0);
 await page.click('#reset');await page.fill('#die-0','9');await calculate(page);assert.equal(await page.locator('.move').count(),0);assert((await page.locator('#status').innerText()).includes('Sprawdź'));
-await page.click('#reset');await page.fill('#bank','50');await calculate(page);assert((await page.locator('.end-score b').first().innerText()).includes('162,013'));
+await page.click('#reset');await page.fill('#score-0','50');await calculate(page);const ev=Number((await page.locator('.ev-number').first().innerText()).replace(/\s|pkt/g,'').replace(',','.'));assert.equal(await page.locator('.end-score b').first().innerText(),(50+ev).toLocaleString('pl-PL',{minimumFractionDigits:3,maximumFractionDigits:3})+' pkt');
 await page.click('#reset');await calculate(page);await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-artifacts/site-mobile.png',fullPage:true});
 assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
 await page.setViewportSize({width:320,height:740});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
