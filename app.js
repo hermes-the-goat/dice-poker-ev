@@ -73,7 +73,7 @@ function calculate(){
 function render(all,{s,total,occupied,revision:resultRevision}){
   $('results').replaceChildren();
   if(!all.length){$('status').textContent=`Wszystkie kategorie są zajęte. Gra zakończona — wynik: ${total} pkt.`;return;}
-  const top=all.slice(0,3);
+  const top=all.slice(0,4);
   $('status').textContent=`Porównano ${all.length} legalnych ruchów. EV obejmuje obecną turę i ${6-occupied} kolejnych.`;
   top.forEach((a,i)=>{
    let title,detail;

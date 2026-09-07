@@ -4,7 +4,7 @@ require('node:fs').mkdirSync('test-artifacts',{recursive:true});
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(process.env.TEST_URL||'http://localhost:8765');await page.waitForSelector('.move');
 assert((await page.locator('.move h3').first().innerText()).includes('Dwie pary'));
-assert.equal(await page.locator('.move').count(),3);
+assert.equal(await page.locator('.move').count(),4);
 await page.screenshot({path:'test-artifacts/site-desktop.png',fullPage:true});
 // Reproduce preserving a pair by crossing out poker on the final normal throw.
 await page.selectOption('#roll','3');await page.uncheck('#extra');

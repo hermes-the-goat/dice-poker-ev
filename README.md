@@ -1,6 +1,6 @@
 # Kości / EV
 
-Statyczny doradca pokera kościanego: pięć kości, odłożone kości, zajęte kategorie, numer rzutu i dostępność dodatkowego rzutu. Ranking trzech najlepszych legalnych ruchów według EV do końca gry. Obliczenia lokalnie w przeglądarce; bez API, śledzenia i kont użytkowników.
+Statyczny doradca pokera kościanego: pięć kości, odłożone kości, zajęte kategorie, numer rzutu i dostępność dodatkowego rzutu. Ranking czterech najlepszych legalnych ruchów według EV do końca gry. Obliczenia lokalnie w przeglądarce; bez API, śledzenia i kont użytkowników.
 
 ## Uruchomienie
 
