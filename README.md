@@ -6,7 +6,7 @@ Statyczny doradca pokera kościanego: pięć kości, odłożone kości, zajęte 
 
 Serwuj katalog dowolnym serwerem statycznym (np. `python3 -m http.server 8765`) i otwórz http://localhost:8765. Otwarcie samego HTML przez file:// nie wystarczy: przeglądarka musi pobrać lokalną tabelę values.json.
 
-## Model
+## Model Standard
 
 - 7 kategorii i tur: para, dwie pary, trójka, street, full, kareta, poker.
 - Pierwszy rzut podwaja sumę kości figury. Bonus pokera +50 nie jest podwajany.
@@ -34,7 +34,7 @@ Pola kości używają `type="text"` z `inputmode="numeric"`, ponieważ pola `num
 
 Obliczenia działają w `solver-worker.js`, poza wątkiem interfejsu. Pierwszy wynik wczytuje się automatycznie; dalsze zmiany (także „Nowa gra”) oznaczają wynik jako nieaktualny do kliknięcia przycisku. Odpowiedzi dla zmienionych wejść są odrzucane.
 
-## Tabela punktów i wynik netto
+## Tabela punktów i wynik netto — Standard
 
 - Każda figura ma opcjonalny wynik: nieujemną liczbę całkowitą. Puste pole wnosi 0 do sumy, ale nie zajmuje figury; wpisane `0` zajmuje figurę. Sam checkbox nadal pozwala oznaczyć zajętą figurę bez znanej punktacji.
 - „Zapisz punkty” przy sugestii zapisuje **rzeczywiste punkty figury** (`points`), a przy skreśleniu dokładnie `0` — nigdy EV. Przy odłożeniu/przerzucie przycisk jest nieaktywny z opisem „Najpierw wykonaj rzut”.
@@ -55,6 +55,31 @@ Obliczenia działają w `solver-worker.js`, poza wątkiem interfejsu. Pierwszy w
 - Losowanie unieważnia ranking i stare przyciski zapisu, także przy trwających obliczeniach. Nie uruchamia automatycznego przeliczenia.
 - `node test-ui-random.cjs`: deterministyczne wyniki losowania w testach, blokady, limity, anulowanie/zakup, jednorazowy koszt, zachowanie tabeli i wyniku netto, zakup przy pustej tabeli, reset, opóźniony worker oraz zrzuty 1440/390/320 px.
 
+## Szkółka — osobny wariant
+
+Duże przyciski **Standard / Szkółka** przełączają niezależne pozycje (kości, blokady, tabela, rzut, dostępność). Reset dotyczy tylko aktywnego wariantu. Dane pozostają w pamięci strony, nie po odświeżeniu. Ładowanie i przełączenie może przeliczyć ranking; edycja, zapis i losowanie wymagają jawnego „Porównaj najlepsze ruchy”.
+
+- 13 pól: Standard 0–6, S1–S6 na indeksach 7–12. `mask` wskazuje wolne pola: 127 w Standard, 8191 w Szkółce. Zapytanie Szkółki zawiera także `sumSN`, sumę zapisanych S1–S6.
+- Szkółka N daje `N*(M-3)`, gdzie M to liczba kości z N oczkami; przy pierwszym rzucie i M ≥ 3 dochodzi +N. Zapis ujemny i naturalne zero są legalne. Nie istnieje dobrowolne skreślenie SN za zero.
+- Zajęte SN wymaga znanej wartości z `N*{-3,-2,-1,0,1,2,3}`. Pola przyjmują znak minus (pełna klawiatura na telefonie). Standard zachowuje opcjonalne, nieujemne wyniki.
+- Bieżące netto to Standard + SN − 10, jeśli dodatkowy rzut jest niedostępny. Suma SN i korekta pokazywane są oddzielnie. Korekta końcowa: −30 dla sumy <0, 0 dla 0–10, +30 dla >10. Dodajemy ją do głównego wyniku dopiero po zajęciu 13 pól.
+- **Prognoza = bieżące netto bez korekty + EV**. Model już uwzględnia końcową korektę, również kiedy wszystkie szkoły są zajęte, a pozostają figury Standard.
+
+### Worker i pliki modelu
+
+`solver-worker.js` dostaje `{type:'load',mode,id}`, odpowiada `{type:'ready',mode,id}` lub `fatal`. Zapytanie `{type:'rank',mode,id,revision,state}` daje `{type:'result',mode,id,revision,all}` albo `error`. Przełączenie kończy poprzedniego workera; kontrola trybu, identyfikatora i rewizji dodatkowo odrzuca spóźnione odpowiedzi. Błędy kończą loader. Po błędzie modelu można przełączyć wariant i wrócić, aby ponowić pobranie.
+
+Standard pobiera tylko `solver.js` i `values.json`. Dopiero wybór Szkółki importuje `school-solver.js` oraz pobiera `school-model.json` i `school-values.bin`; używa `new DicePokerSchool.Engine(metadata,new Float64Array(buffer))`. Model może korzystać z cache HTTP; pamięć workera jest zwalniana przy przełączeniu. Nie ma zastępczego ani syntetycznego EV przy braku modelu. Przed konstrukcją silnika worker weryfikuje SHA-256 pliku binarnego zgodnie z metadanymi (HTTPS lub localhost). Kontrakt i reprodukcja generatora: `model-school/README.md`.
+
+`node test-ui-school.cjs` — testy rzeczywistego UI, lazy load, niezależnych stanów, wymaganej i osiągalnej punktacji, znaku minus, terminalnej korekty, kosztu rzutu oraz braku przewijania poziomego w 1440/390/320 px. Po dostępności rzeczywistego modelu także regresja **S1–S6 = 0, wszystkie 7 figur Standard wolne → identyczne EV Standard**, zapis ujemnego SN i brak fałszywego skreślenia. Brak plików modelu jest jawnie raportowany jako `BLOCKED`, nie jako przejście integracji EV. Zrzuty: `test-artifacts/school-{1440,390,320}.png`.
+
+### Weryfikacja modelu i wydajności
+
+- `python3 model-school/test_model.py` — testy rzeczywistego LUT i niezależnej wyroczni.
+- `node test-school-solver.cjs --require-model` — porównanie granic i rankingów ze Standard, szkółkowe końcówki i równania Bellmana.
+- `node test-school-integrity.cjs` — uszkodzony LUT o poprawnym rozmiarze jest odrzucany; odzyskanie Standard i ponowne wczytanie prawidłowej Szkółki.
+- `node test-school-performance.cjs` — rzeczywisty worker i renderowanie w Chromium, limit 1 s po gotowości modelu, 40 pozycji dla każdej szerokości 1440/390 px. Pobranie/inicjalizacja mierzone osobno. Emulowany viewport mobilny nie jest pomiarem fizycznego telefonu. Wyniki w `test-artifacts/school-performance.json`.
+
 ## Hosting
 
-GitHub Pages, gałąź main, katalog główny. Aplikacja nie wymaga procesu backendowego, kluczy ani płatnych usług. Repozytorium zawiera wyłącznie aplikację i jej testy.
+GitHub Pages, gałąź main, katalog główny. Aplikacja nie wymaga procesu backendowego, kluczy ani płatnych usług. Repozytorium zawiera aplikację, testy, model oraz odtwarzalny generator offline Szkółki.

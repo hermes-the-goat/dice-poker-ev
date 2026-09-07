@@ -1,17 +1,26 @@
 'use strict';
-const $=id=>document.getElementById(id),names=DicePoker.names;
-let worker=null,ready=false,busy=false,revision=0,request=null;
+const $=id=>document.getElementById(id);
+let mode='standard',names=DicePoker.names,scores=names.map(()=>null);
+let worker=null,ready=false,busy=false,revision=0,request=null,requestId=0;
+const games={};
 const initial=[2,2,6,6,1];
 $('dice').innerHTML=initial.map((v,i)=>`<div class="die"><input class="die-value" id="die-${i}" aria-label="Kość ${i+1}: liczba oczek" type="text" inputmode="numeric" pattern="[1-6]" value="${v}"><label class="lock-label"><input class="lock" id="lock-${i}" type="checkbox" aria-label="Kość ${i+1} odłożona">Odłożona</label></div>`).join('');
-$('categories').innerHTML=names.map((name,c)=>`<div class="category"><label class="category-used"><input type="checkbox" id="used-${c}"><span>${name}</span></label><input class="category-score" id="score-${c}" type="number" min="0" step="1" inputmode="numeric" placeholder="—" aria-label="${name}: punkty (opcjonalnie)" aria-describedby="score-help score-error"></div>`).join('');
-const scores=names.map(()=>null);
-function netTotal(){return scores.reduce((sum,n)=>sum+(n??0),0)-($('extra').checked?0:10);}
+function schoolCategory(c){return mode==='school'&&c>=7;}
+function drawCategories(){
+ $('categories').innerHTML=names.map((name,c)=>`${c===7?'<h3 class="school-heading">Szkółki · S1–S6</h3>':''}<div class="category${schoolCategory(c)?' school-category':''}"><label class="category-used"><input type="checkbox" id="used-${c}"><span>${name}</span></label><input class="category-score" id="score-${c}" type="number" min="${schoolCategory(c)?-3*(c-6):0}" ${schoolCategory(c)?`max="${3*(c-6)}"`:''} step="${schoolCategory(c)?c-6:1}" inputmode="${schoolCategory(c)?'text':'numeric'}" placeholder="—" aria-label="${name}: punkty (${schoolCategory(c)?'wymagane po zajęciu':'opcjonalnie'})" aria-describedby="score-help score-error"></div>`).join('');
+}
+drawCategories();
+function sumSN(){return mode==='school'?scores.slice(7).reduce((sum,n)=>sum+(n??0),0):0;}
+function schoolBonus(){const sum=sumSN();return sum<0?-30:sum>10?30:0;}
+function baseTotal(){return scores.reduce((sum,n)=>sum+(n??0),0)-($('extra').checked?0:10);}
+function netTotal(){return baseTotal()+(mode==='school'&&names.every((_,c)=>$('used-'+c).checked)?schoolBonus():0);}
+function validPoints(c,n){return Number.isSafeInteger(n)&&(schoolCategory(c)?n>=-3*(c-6)&&n<=3*(c-6)&&n%(c-6)===0:n>=0);}
 // Apply only valid, complete edits. Empty optional scores contribute zero.
 function reconcileScores(){
  const next=names.map((_,c)=>{const input=$('score-'+c);return input.value===''&&!input.validity.badInput?null:Number(input.value);});
- const invalid=names.findIndex((_,c)=>!$('score-'+c).validity.valid||(next[c]!==null&&(!Number.isSafeInteger(next[c])||next[c]<0)));
+ const invalid=names.findIndex((_,c)=>!$('score-'+c).validity.valid||(next[c]!==null&&!validPoints(c,next[c]))||(schoolCategory(c)&&$('used-'+c).checked&&next[c]===null));
  if(invalid!==-1||!Number.isSafeInteger(next.reduce((sum,n)=>sum+(n??0),0))){
-  $('score-error').textContent=invalid!==-1?'Wpisz nieujemną, całkowitą liczbę punktów albo zostaw pole puste.':'Wynik jest zbyt duży. Zmniejsz liczbę punktów.';
+  $('score-error').textContent=invalid!==-1?(schoolCategory(invalid)?`S${invalid-6}: zajęte pole wymaga wyniku. Dozwolone punkty: ${[-3,-2,-1,0,1,2,3].map(n=>n*(invalid-6)).join(', ')}. Zero jest poprawnym wynikiem, nie skreśleniem.`:'Wpisz nieujemną, całkowitą liczbę punktów albo zostaw pole puste.'):'Wynik jest zbyt duży. Zmniejsz liczbę punktów.';
   names.forEach((_,c)=>$('score-'+c).setAttribute('aria-invalid',String(c===invalid)));
   return false;
  }
@@ -24,12 +33,16 @@ function editPosition(event){
  reconcileScores();invalidate();
 }
 const fmt=n=>n.toLocaleString('pl-PL',{minimumFractionDigits:3,maximumFractionDigits:3});
-function state(){return {dice:initial.map((_,i)=>Number($('die-'+i).value)),locked:initial.map((_,i)=>$('lock-'+i).checked),mask:names.reduce((m,_,c)=>m|($('used-'+c).checked?0:1<<c),0),roll:Number($('roll').value),extra:$('extra').checked};}
+function state(){return {dice:initial.map((_,i)=>Number($('die-'+i).value)),locked:initial.map((_,i)=>$('lock-'+i).checked),mask:names.reduce((m,_,c)=>m|($('used-'+c).checked?0:1<<c),0),roll:Number($('roll').value),extra:$('extra').checked,...(mode==='school'?{sumSN:sumSN()}:{})};}
 function syncControls(){
  const occupied=names.filter((_,c)=>$('used-'+c).checked).length,paid=$('roll').value==='4';
- $('turn-badge').textContent=occupied===7?'Koniec gry':`Tura ${occupied+1} / 7`;
+ $('turn-badge').textContent=occupied===names.length?'Koniec gry':`Tura ${occupied+1} / ${names.length}`;
  if(paid)$('extra').checked=false;
  $('extra').disabled=paid;$('score-total').textContent=String(netTotal());
+ $('school-summary').hidden=mode!=='school';
+ $('school-subtotal').textContent=String(sumSN());
+ $('school-bonus').textContent=String(schoolBonus());
+ $('school-bonus-help').textContent=occupied===13?'Korekta końcowa jest już w wyniku netto.':'Korekta, gdyby to była końcowa suma szkółek. Jeszcze nie doliczona do wyniku netto; EV już uwzględnia korektę końcową.';
  const s=state(),allLocked=s.locked.every(Boolean);
  $('random-remaining').disabled=allLocked||s.roll>=4||(s.roll===3&&!s.extra);
  $('random-help').textContent=allLocked?'Wszystkie kości są odłożone — nie ma czego przerzucić.':s.roll>=4?'Wykorzystano 4 rzuty — zapisz wynik lub rozpocznij nową turę.':s.roll===3&&!s.extra?'Limit 3 rzutów — dodatkowy rzut jest niedostępny.':'';
@@ -65,16 +78,16 @@ function calculate(){
  if(!ready||busy)return;
  if(!reconcileScores()){showError($('score-error').textContent);return;}
  syncControls();
- const s=state(),total=netTotal();
- request={revision,s,total,occupied:names.filter((_,c)=>$('used-'+c).checked).length};
+ const s=state(),total=baseTotal();
+ request={id:++requestId,mode,revision,s,total,occupied:names.filter((_,c)=>$('used-'+c).checked).length};
  setBusy(true);
- try{worker.postMessage({revision,state:s});}catch{fatal('Nie udało się uruchomić obliczeń. Odśwież stronę.');}
+ try{worker.postMessage({type:'rank',id:request.id,mode,revision,state:s});}catch{fatal('Nie udało się uruchomić obliczeń. Odśwież stronę.');}
 }
 function render(all,{s,total,occupied,revision:resultRevision}){
   $('results').replaceChildren();
-  if(!all.length){$('status').textContent=`Wszystkie kategorie są zajęte. Gra zakończona — wynik: ${total} pkt.`;return;}
+  if(!all.length){$('status').textContent=`Wszystkie kategorie są zajęte. Gra zakończona — wynik: ${netTotal()} pkt.`;return;}
   const top=all.slice(0,4);
-  $('status').textContent=`Porównano ${all.length} legalnych ruchów. EV obejmuje obecną turę i ${6-occupied} kolejnych.`;
+  $('status').textContent=`Porównano ${all.length} legalnych ruchów. EV obejmuje obecną turę i ${names.length-1-occupied} kolejnych.${mode==='school'?' Korekta końcowa szkółek jest już w EV.':''}`;
   top.forEach((a,i)=>{
    let title,detail;
    if(a.type==='hold'){
@@ -94,7 +107,7 @@ function render(all,{s,total,occupied,revision:resultRevision}){
    button.addEventListener('click',()=>{
     if(!recordable||saved||resultRevision!==revision||busy)return;
     const c=a.category,points=a.type==='zero'?0:a.points;
-    if(!Number.isInteger(c)||c<0||c>=names.length||$('used-'+c).checked||scores[c]!==null||$('score-'+c).value!==''||!Number.isSafeInteger(points)||points<0)return;
+    if(!Number.isInteger(c)||c<0||c>=names.length||$('used-'+c).checked||scores[c]!==null||$('score-'+c).value!==''||!validPoints(c,points)||(schoolCategory(c)&&a.type==='zero'))return;
     if(!reconcileScores())return;
     $('score-'+c).value=String(points);
     if(!reconcileScores()){$('score-'+c).value='';return;}
@@ -121,12 +134,16 @@ $('reset').addEventListener('click',()=>{initial.forEach((v,i)=>{$('die-'+i).val
 function fatal(message){
  ready=false;request=null;worker?.terminate();setBusy(false,'Odśwież stronę, aby wczytać model');showError(message);
 }
-try{
- worker=new Worker('./solver-worker.js');
+function startWorker(){try{
+ const activeMode=mode,loadId=++requestId;
+ ready=false;request=null;worker?.terminate();worker=new Worker('./solver-worker.js');
+ const activeWorker=worker;
+ setBusy(true);$('calculate-label').textContent='Wczytywanie modelu…';$('status').textContent='Przygotowuję model…';
  worker.onmessage=({data})=>{
+  if(worker!==activeWorker||mode!==activeMode||data.mode!==mode)return;
   if(data.type==='fatal'){fatal(data.error);return;}
-  if(data.type==='ready'){ready=true;setBusy(false);calculate();return;}
-  if(!request||data.revision!==request.revision)return;
+  if(data.type==='ready'){if(data.id!==loadId)return;ready=true;setBusy(false);calculate();return;}
+  if(!request||data.id!==request.id||data.mode!==request.mode||data.revision!==request.revision)return;
   const completed=request;request=null;
   try{
    // Never publish results (or errors) for inputs changed while the worker ran.
@@ -136,6 +153,25 @@ try{
   }catch{showError('Nie udało się wyświetlić wyniku. Spróbuj ponownie.');}
   finally{setBusy(false);}
  };
- worker.onerror=event=>{event.preventDefault();fatal('Nie udało się uruchomić modelu. Odśwież stronę.');};
- worker.onmessageerror=()=>fatal('Nie udało się odczytać wyniku. Odśwież stronę.');
-}catch{fatal('Nie udało się uruchomić modelu. Odśwież stronę.');}
+ worker.onerror=event=>{event.preventDefault();if(worker===activeWorker&&mode===activeMode)fatal('Nie udało się uruchomić modelu. Odśwież stronę.');};
+ worker.onmessageerror=()=>{if(worker===activeWorker&&mode===activeMode)fatal('Nie udało się odczytać wyniku. Odśwież stronę.');};
+ worker.postMessage({type:'load',mode,id:loadId});
+}catch{fatal('Nie udało się uruchomić modelu. Odśwież stronę.');}}
+const standardHelp=$('score-help').textContent;
+function switchMode(next){
+ if(next===mode)return;
+ games[mode]={dice:initial.map((_,i)=>$('die-'+i).value),locked:initial.map((_,i)=>$('lock-'+i).checked),used:names.map((_,c)=>$('used-'+c).checked),inputs:names.map((_,c)=>$('score-'+c).value),scores:[...scores],roll:$('roll').value,extra:$('extra').checked};
+ mode=next;names=mode==='school'?[...DicePoker.names,...Array.from({length:6},(_,i)=>`S${i+1}`)]:DicePoker.names;
+ const game=games[mode];scores=game?[...game.scores]:names.map(()=>null);drawCategories();
+ initial.forEach((v,i)=>{$('die-'+i).value=game?game.dice[i]:v;$('lock-'+i).checked=game?game.locked[i]:false;});
+ names.forEach((_,c)=>{$('used-'+c).checked=game?game.used[c]:false;$('score-'+c).value=game?game.inputs[c]:'';});
+ $('roll').value=game?game.roll:'1';$('extra').checked=game?game.extra:true;
+ $('mode-standard').setAttribute('aria-pressed',String(mode==='standard'));$('mode-school').setAttribute('aria-pressed',String(mode==='school'));
+ document.body.dataset.mode=mode;$('model-turns').textContent=`${names.length} tur · 3 rzuty`;
+ $('score-help').textContent=mode==='school'?'Figury Standard: punkty opcjonalne. S1–S6: zajęte pole wymaga rzeczywistego wyniku, także ujemnego lub 0. Nie można dobrowolnie skreślić szkółki. Odznaczenie usuwa wynik.':standardHelp;
+ $('roll').options[0].textContent=mode==='school'?'1 — z premią pierwszego rzutu':'1 — zapis z bonusem ×2';
+ $('school-rules').hidden=mode!=='school';reconcileScores();invalidate();$('results').replaceChildren();startWorker();
+}
+$('mode-standard').addEventListener('click',()=>switchMode('standard'));
+$('mode-school').addEventListener('click',()=>switchMode('school'));
+startWorker();

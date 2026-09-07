@@ -1,0 +1,1792 @@
+{
+  "version": 1,
+  "source": "Exact C++ LUT and current-turn Bellman DP",
+  "independentlyVerifiedPositions": 12,
+  "maxAbsoluteOracleError": 2.842170943040401e-14,
+  "positions": [
+    {
+      "id": "school-1",
+      "state": {
+        "mask": 8191,
+        "standardMask": 127,
+        "schoolRemaining": 63,
+        "schoolSum": 0,
+        "extra": 1,
+        "roll": 1,
+        "counts": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ev": 145.88689352116086,
+      "actions": [
+        {
+          "type": "score",
+          "category": 12,
+          "points": 6,
+          "ev": 145.88689352116086
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 36,
+          "ev": 141.88334244778454
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 140.22672882844694
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            3
+          ],
+          "ev": 132.34448072686223
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            3
+          ],
+          "ev": 131.78892517130666
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            2
+          ],
+          "ev": 128.4922102703753
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 24,
+          "ev": 128.03082912415022
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            2
+          ],
+          "ev": 123.88694677657871
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            2
+          ],
+          "ev": 123.34682331978854
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "ev": 122.9512181042025
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 122.37514324425028
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "ev": 121.54510234010182
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 121.16193435022002
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "ev": 120.80783102657875
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            1
+          ],
+          "ev": 120.43152567877208
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "ev": 119.36582712696628
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            2
+          ],
+          "ev": 118.53614700694871
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            1
+          ],
+          "ev": 118.1790686311369
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 0,
+          "ev": 114.09137304957792
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 111.11674380860742
+        },
+        {
+          "type": "score",
+          "category": 7,
+          "points": -3,
+          "ev": 110.94549289720077
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 108.64736082800619
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 0,
+          "ev": 105.88334244778454
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 0,
+          "ev": 105.7851550378852
+        },
+        {
+          "type": "score",
+          "category": 9,
+          "points": -6,
+          "ev": 104.30919899547321
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": 104.0308291241502
+        },
+        {
+          "type": "score",
+          "category": 8,
+          "points": -6,
+          "ev": 103.97835380800342
+        },
+        {
+          "type": "score",
+          "category": 10,
+          "points": -8,
+          "ev": 100.48763726624976
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 0,
+          "ev": 95.3633546283008
+        },
+        {
+          "type": "score",
+          "category": 11,
+          "points": -15,
+          "ev": 93.2451820267364
+        }
+      ],
+      "independentlyVerified": false
+    },
+    {
+      "id": "school-2",
+      "state": {
+        "mask": 8191,
+        "standardMask": 127,
+        "schoolRemaining": 63,
+        "schoolSum": 0,
+        "extra": 0,
+        "roll": 1,
+        "counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ev": 137.88300949918053,
+      "actions": [
+        {
+          "type": "score",
+          "category": 3,
+          "points": 30,
+          "ev": 137.88300949918053
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 121.6786977413301
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "ev": 121.46705135033191
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "ev": 120.84292591694033
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 120.44765268678348
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          "ev": 120.19218747490554
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 120.18358979932019
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 119.69445009885006
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "ev": 119.32610752517063
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          "ev": 119.02281081016524
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "ev": 118.99026679776327
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "ev": 118.78802273779694
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "ev": 118.77004536631519
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 118.72091455699034
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "ev": 118.64076446961637
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "ev": 118.56638487260494
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 118.50889075176978
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 118.49610888174108
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          "ev": 117.99425419226819
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            0
+          ],
+          "ev": 117.99195126920807
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "ev": 117.97544549697318
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            1,
+            1,
+            0
+          ],
+          "ev": 117.79478248019254
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          "ev": 117.32461006128419
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 117.3063453292322
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "ev": 117.30365858566206
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0
+          ],
+          "ev": 117.20164053418482
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          "ev": 117.20164053418482
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "ev": 117.20164053418482
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "ev": 117.11949519534748
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "ev": 117.1167536202759
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "ev": 117.09811613859021
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            0
+          ],
+          "ev": 117.041897362713
+        },
+        {
+          "type": "score",
+          "category": 7,
+          "points": -2,
+          "ev": 113.51110605930441
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 0,
+          "ev": 113.28424215081127
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 110.49589490367369
+        },
+        {
+          "type": "score",
+          "category": 8,
+          "points": -4,
+          "ev": 108.65314459869236
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 107.88300949918053
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 0,
+          "ev": 105.1191367754681
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 0,
+          "ev": 105.08605992838297
+        },
+        {
+          "type": "score",
+          "category": 9,
+          "points": -6,
+          "ev": 103.90215158679102
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": 103.29736087407383
+        },
+        {
+          "type": "score",
+          "category": 10,
+          "points": -8,
+          "ev": 100.19369567045865
+        },
+        {
+          "type": "score",
+          "category": 11,
+          "points": -10,
+          "ev": 98.35082555009839
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 0,
+          "ev": 94.67928722454823
+        },
+        {
+          "type": "score",
+          "category": 12,
+          "points": -18,
+          "ev": 91.2353372724738
+        }
+      ],
+      "independentlyVerified": false
+    },
+    {
+      "id": "school-3",
+      "state": {
+        "mask": 8191,
+        "standardMask": 127,
+        "schoolRemaining": 63,
+        "schoolSum": 0,
+        "extra": 1,
+        "roll": 2,
+        "counts": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "ev": 132.8753466647324,
+      "actions": [
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 132.8753466647324
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            3
+          ],
+          "ev": 129.09870895053183
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            3
+          ],
+          "ev": 128.7653756171985
+        },
+        {
+          "type": "score",
+          "category": 12,
+          "points": 0,
+          "ev": 124.23005128603623
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 18,
+          "ev": 123.88334244778454
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": 116.0308291241502
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 0,
+          "ev": 114.09137304957792
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 111.11674380860742
+        },
+        {
+          "type": "score",
+          "category": 7,
+          "points": -3,
+          "ev": 110.94549289720077
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 108.64736082800619
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 0,
+          "ev": 105.88334244778454
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 0,
+          "ev": 105.7851550378852
+        },
+        {
+          "type": "score",
+          "category": 9,
+          "points": -6,
+          "ev": 104.30919899547321
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": 104.0308291241502
+        },
+        {
+          "type": "score",
+          "category": 8,
+          "points": -6,
+          "ev": 103.97835380800342
+        },
+        {
+          "type": "score",
+          "category": 10,
+          "points": -8,
+          "ev": 100.48763726624976
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 0,
+          "ev": 95.3633546283008
+        },
+        {
+          "type": "score",
+          "category": 11,
+          "points": -15,
+          "ev": 93.2451820267364
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-4",
+      "state": {
+        "mask": 2249,
+        "standardMask": 73,
+        "schoolRemaining": 17,
+        "schoolSum": -1,
+        "extra": 1,
+        "roll": 3,
+        "counts": [
+          2,
+          0,
+          0,
+          0,
+          1,
+          2
+        ],
+        "locked": [
+          2,
+          0,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "ev": 7.988469441177475,
+      "actions": [
+        {
+          "type": "score",
+          "category": 7,
+          "points": -1,
+          "ev": 7.988469441177475
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 6.156923311937575
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": 5.727098679510554
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 3.58981315298246
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            2,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "ev": -1.8092438317906527
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            2,
+            0,
+            0,
+            0,
+            1,
+            1
+          ],
+          "ev": -2.4526611588310203
+        },
+        {
+          "type": "score",
+          "category": 11,
+          "points": -10,
+          "ev": -4.026644831842287
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": -6.272901320489446
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-5",
+      "state": {
+        "mask": 4097,
+        "standardMask": 1,
+        "schoolRemaining": 32,
+        "schoolSum": 0,
+        "extra": 1,
+        "roll": 3,
+        "counts": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "ev": 15.863109882690011,
+      "actions": [
+        {
+          "type": "score",
+          "category": 12,
+          "points": 0,
+          "ev": 15.863109882690011
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 8.69644321602335
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            1,
+            0,
+            0,
+            3
+          ],
+          "ev": 6.863109882690011
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 6.863109882690011
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": -10.248812601306835
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": -22.248812601306835
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-6",
+      "state": {
+        "mask": 192,
+        "standardMask": 64,
+        "schoolRemaining": 1,
+        "schoolSum": 10,
+        "extra": 0,
+        "roll": 2,
+        "counts": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "ev": 4.941492499985281,
+      "actions": [
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 4.941492499985281
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 2.7192702777630595
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 2.719270277763059
+        },
+        {
+          "type": "score",
+          "category": 7,
+          "points": -1,
+          "ev": 2.1344966592011105
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-7",
+      "state": {
+        "mask": 4096,
+        "standardMask": 0,
+        "schoolRemaining": 32,
+        "schoolSum": 11,
+        "extra": 1,
+        "roll": 3,
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          1
+        ]
+      },
+      "ev": 30,
+      "actions": [
+        {
+          "type": "score",
+          "category": 12,
+          "points": 0,
+          "ev": 30
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            2
+          ],
+          "ev": -10
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            1
+          ],
+          "ev": -39.99999999999999
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-8",
+      "state": {
+        "mask": 4096,
+        "standardMask": 0,
+        "schoolRemaining": 32,
+        "schoolSum": -1,
+        "extra": 0,
+        "roll": 3,
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          3
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          1
+        ]
+      },
+      "ev": -30,
+      "actions": [
+        {
+          "type": "score",
+          "category": 12,
+          "points": 0,
+          "ev": -30
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-9",
+      "state": {
+        "mask": 128,
+        "standardMask": 0,
+        "schoolRemaining": 1,
+        "schoolSum": 0,
+        "extra": 0,
+        "roll": 4,
+        "counts": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "locked": [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "ev": -33,
+      "actions": [
+        {
+          "type": "score",
+          "category": 7,
+          "points": -3,
+          "ev": -33
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-10",
+      "state": {
+        "mask": 129,
+        "standardMask": 1,
+        "schoolRemaining": 1,
+        "schoolSum": -1,
+        "extra": 0,
+        "roll": 3,
+        "counts": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        "locked": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "ev": -15.280729722237005,
+      "actions": [
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": -15.280729722237005
+        },
+        {
+          "type": "score",
+          "category": 7,
+          "points": -3,
+          "ev": -17.136890117310003
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": -27.280729722237005
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-11",
+      "state": {
+        "mask": 127,
+        "standardMask": 127,
+        "schoolRemaining": 0,
+        "schoolSum": 11,
+        "extra": 1,
+        "roll": 3,
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "ev": 206.27928606921566,
+      "actions": [
+        {
+          "type": "score",
+          "category": 6,
+          "points": 80,
+          "ev": 206.27928606921566
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 30,
+          "ev": 150.0139298272909
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 24,
+          "ev": 149.13534777550234
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            4
+          ],
+          "ev": 148.42161250333967
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 18,
+          "ev": 134.86990893496636
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 24,
+          "ev": 134.01345269769962
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 131.92869341173662
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": 128.76699775836423
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 126.27928606921566
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 0,
+          "ev": 125.13534777550232
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 124.61900662327415
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 0,
+          "ev": 120.01392982729091
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 0,
+          "ev": 116.86990893496635
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": 116.76699775836423
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 0,
+          "ev": 110.01345269769962
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-12",
+      "state": {
+        "mask": 127,
+        "standardMask": 127,
+        "schoolRemaining": 0,
+        "schoolSum": -1,
+        "extra": 0,
+        "roll": 2,
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "locked": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      },
+      "ev": 146.27280015794844,
+      "actions": [
+        {
+          "type": "score",
+          "category": 6,
+          "points": 80,
+          "ev": 146.27280015794844
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            4
+          ],
+          "ev": 98.42161250333947
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 30,
+          "ev": 89.94206145438248
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 24,
+          "ev": 88.85137497241767
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ],
+          "ev": 81.9286934117365
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 18,
+          "ev": 74.74680528342384
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 24,
+          "ev": 73.91801180214446
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 12,
+          "ev": 68.65836834807341
+        },
+        {
+          "type": "score",
+          "category": 6,
+          "points": 0,
+          "ev": 66.27280015794842
+        },
+        {
+          "type": "score",
+          "category": 5,
+          "points": 0,
+          "ev": 64.85137497241767
+        },
+        {
+          "type": "score",
+          "category": 3,
+          "points": 0,
+          "ev": 64.4862184334826
+        },
+        {
+          "type": "score",
+          "category": 4,
+          "points": 0,
+          "ev": 59.94206145438248
+        },
+        {
+          "type": "score",
+          "category": 2,
+          "points": 0,
+          "ev": 56.74680528342384
+        },
+        {
+          "type": "score",
+          "category": 0,
+          "points": 0,
+          "ev": 56.65836834807341
+        },
+        {
+          "type": "score",
+          "category": 1,
+          "points": 0,
+          "ev": 49.91801180214446
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-13",
+      "state": {
+        "mask": 256,
+        "standardMask": 0,
+        "schoolRemaining": 2,
+        "schoolSum": 10,
+        "extra": 1,
+        "roll": 2,
+        "counts": [
+          1,
+          3,
+          1,
+          0,
+          0,
+          0
+        ],
+        "locked": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "ev": 9.833333333333332,
+      "actions": [
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            3,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 9.833333333333332
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            3,
+            1,
+            0,
+            0,
+            0
+          ],
+          "ev": 5.333333333333333
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            3,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ev": 5.333333333333333
+        },
+        {
+          "type": "score",
+          "category": 8,
+          "points": 0,
+          "ev": 0
+        }
+      ],
+      "independentlyVerified": true
+    },
+    {
+      "id": "school-14",
+      "state": {
+        "mask": 512,
+        "standardMask": 0,
+        "schoolRemaining": 4,
+        "schoolSum": -12,
+        "extra": 0,
+        "roll": 2,
+        "counts": [
+          1,
+          0,
+          3,
+          1,
+          0,
+          0
+        ],
+        "locked": [
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      "ev": -29,
+      "actions": [
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          "ev": -29
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            0,
+            0,
+            3,
+            1,
+            0,
+            0
+          ],
+          "ev": -29.5
+        },
+        {
+          "type": "reroll",
+          "hold": [
+            1,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          "ev": -29.5
+        },
+        {
+          "type": "score",
+          "category": 9,
+          "points": 0,
+          "ev": -30
+        }
+      ],
+      "independentlyVerified": true
+    }
+  ]
+}
